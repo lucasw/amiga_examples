@@ -325,7 +325,7 @@ static void read_input(lz_context *ctx, const char *name) {
 	{
 		struct stat stat;
 		stat.st_size = 0;
-		fstat(_fileno(file), &stat);
+		fstat(fileno(file), &stat);
 		length = stat.st_size;
 	}
 #	endif
