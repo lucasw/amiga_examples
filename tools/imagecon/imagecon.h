@@ -9,7 +9,7 @@
 #include <getopt.h>
 #include <libgen.h>
 #include <png.h>
-#include <pngquant/libimagequant.h>
+#include <libimagequant.h>
 
 #define MAX_PALETTE 32
 

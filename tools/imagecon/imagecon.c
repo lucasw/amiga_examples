@@ -3,6 +3,7 @@
  */
 
 #include "imagecon.h"
+#include "png_util.h"
 
 imagecon_config_t config = { 
   .maxColors = MAX_PALETTE, 

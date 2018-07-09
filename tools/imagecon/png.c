@@ -45,7 +45,10 @@ png_read(imagecon_image_t* ic, char* filename)
   FILE *fp = fopen(filename, "rb");
   if (!fp)
     abort_("Failed to open %s", filename);
-  fread(header, 1, 8, fp);
+  const size_t count = 8;
+  size_t rv = fread(header, 1, count, fp);
+  if (rv != count)
+    abort_("Wrong number read %d", rv);
   if (png_sig_cmp(header, 0, 8))
     abort_("File %s is not recognized as a PNG file", filename);
 
