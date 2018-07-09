@@ -1,6 +1,11 @@
 HOST_WARNINGS=-pedantic-errors -Wfatal-errors -Wall -Werror -Wextra -Wno-unused-parameter -Wshadow
 HOST_CFLAGS=$(HOST_WARNINGS)
 
+# amiga includes -> hardware/custom.i etc.
+# https://github.com/kusma/amiga-dev has a copy
+# originally was /usr/local/amiga/os-include - TODO(lucasw) make that the default
+AMIGA_INC=${AMIGA_INC}
+
 MAKEADFDIR=../tools/makeadf/
 MAKEADF=$(MAKEADFDIR)/out/makeadf
 IMAGECONDIR=../tools/imagecon
@@ -110,15 +115,15 @@ out/bootblock.bin: out/bootblock.o
 	vlink -brawbin1 $< -o $@
 
 out/bootblock.o: $(BOOTBLOCK_ASM) $(PROGRAM_BIN)
-	vasmm68k_mot $(VASM_ARGS) $(VASM_EXTRA_BOOTBLOCK_ARGS) -DUSERSTACK_ADDRESS="\$$$(USERSTACK_ADDRESS)" -DBASE_ADDRESS="\$$$(BASE_ADDRESS)"  $< -o $@ -I/usr/local/amiga/os-include
+	vasmm68k_mot $(VASM_ARGS) $(VASM_EXTRA_BOOTBLOCK_ARGS) -DUSERSTACK_ADDRESS="\$$$(USERSTACK_ADDRESS)" -DBASE_ADDRESS="\$$$(BASE_ADDRESS)"  $< -o $@ $(AMIGA_INC)
 
 out/main.o: $(MODULE) $(EXTRA)
-	vasmm68k_mot $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ -I/usr/local/amiga/os-include
-	@vasmm68k_mot -depend=make $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ -I/usr/local/amiga/os-include > $*.d
+	vasmm68k_mot $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ $(AMIGA_INC)
+	@vasmm68k_mot -depend=make $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ $(AMIGA_INC) > $*.d
 
 out/%.o: %.s
-	vasmm68k_mot $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ -I/usr/local/amiga/os-include
-	@vasmm68k_mot -depend=make $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ -I/usr/local/amiga/os-include > out/$*.d
+	vasmm68k_mot $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ $(AMIGA_INC)
+	@vasmm68k_mot -depend=make $(VASM_ARGS) $(VASM_EXTRA_ARGS) $< -o $@ $(AMIGA_INC) > out/$*.d
 
 out/%.o: %.c
 	vc -O3 -c $< -o $@
