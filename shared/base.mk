@@ -5,6 +5,8 @@ HOST_CFLAGS=$(HOST_WARNINGS)
 # https://github.com/kusma/amiga-dev has a copy
 # originally was /usr/local/amiga/os-include - TODO(lucasw) make that the default
 AMIGA_INC=${AMIGA_INC}
+# This was ~/Projects/amiga before- it needs to exist as a directory before running this
+PROJ_DIR=${PROJ_DIR}
 
 MAKEADFDIR=../tools/makeadf/
 MAKEADF=$(MAKEADFDIR)/out/makeadf
@@ -72,7 +74,7 @@ gdrive: all
 	cp $(FLOPPY) ~/Google\ Drive
 
 test: all
-	cp $(FLOPPY) ~/Projects/amiga/test.adf
+	cp $(FLOPPY) $(PROJ_DIR)/test.adf
 
 go: test
 	 $(RUN_SCRIPT)
@@ -136,8 +138,8 @@ ALL_DEPENDS=$(ALL_OBJS:.o=.d)
 out/main.bin: out/main.o $(OBJS)
 	vlink $(LINKER_OPTIONS)  -brawbin1 $< $(OBJS) -o $@
 	@vlink $(LINKER_OPTIONS) -brawbin1 $< $(OBJS) -M -o /tmp/main.bin | grep ", value " | cut -d " " -f3,7 | cut -d "," -f1 > $@.symbols
-	@cp $@.symbols ~/Projects/amiga/debugger.syms
-	@echo "RAM USAGE:" $$((16#`cat ~/Projects/amiga/debugger.syms | grep endRam | sed 's/0x//' | sed 's/endRam: //'`)) bytes
+	@cp $@.symbols $(PROJ_DIR)/debugger.syms
+	@echo "RAM USAGE:" $$((16#`cat $(PROJ_DIR)/debugger.syms | grep endRam | sed 's/0x//' | sed 's/endRam: //'`)) bytes
 
 
 out/shrunk.bin: $(SHRINKLER_EXE) out/main.bin
