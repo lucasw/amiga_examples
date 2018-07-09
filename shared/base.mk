@@ -139,8 +139,10 @@ out/main.bin: out/main.o $(OBJS)
 	vlink $(LINKER_OPTIONS)  -brawbin1 $< $(OBJS) -o $@
 	@vlink $(LINKER_OPTIONS) -brawbin1 $< $(OBJS) -M -o /tmp/main.bin | grep ", value " | cut -d " " -f3,7 | cut -d "," -f1 > $@.symbols
 	@cp $@.symbols $(PROJ_DIR)/debugger.syms
-	@echo "RAM USAGE:" $$((16#`cat $(PROJ_DIR)/debugger.syms | grep endRam | sed 's/0x//' | sed 's/endRam: //'`)) bytes
+	@echo "RAM USAGE: TBD"
 
+# TODO(lucasw) need to fix this
+# @echo "RAM USAGE: $$((16#`cat $(PROJ_DIR)/debugger.syms | grep endRam | sed 's/0x//' | sed 's/endRam: //'`)) bytes"
 
 out/shrunk.bin: $(SHRINKLER_EXE) out/main.bin
 	$(SHRINKLEREXE) -d out/main.bin out/shrunk.bin

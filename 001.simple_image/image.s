@@ -66,4 +66,3 @@ copper:
 	dc.l	$fffffffe	
 bitplanes:
 	incbin	"out/image.bin"
-	
